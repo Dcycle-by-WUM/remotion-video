@@ -27,7 +27,7 @@ function App() {
           inputProps={{
             frames
           }}
-          durationInFrames={46}
+          durationInFrames={120}
           fps={30}
           compositionWidth={1280}
           compositionHeight={1280}

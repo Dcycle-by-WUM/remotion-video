@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Player } from '@remotion/player';
+import { useState } from 'react';
 import './App.css';
+import Media from './media/Media';
+import VideoComposition from './remotion/VideoComposition';
 
 function App() {
+  const [frames, setFrames] = useState<string[]>([]);
+
+  const handleFiles = (files: FileList) => {
+    const filesMapped = Array.from(files).map((file, index) => {
+      const blob = file.slice(0, file.size, 'image/png');
+      const newFile = new File([blob], 'frame' + index + '.png', { type: 'image/png' });
+      return URL.createObjectURL(newFile);
+    });
+
+    setFrames(filesMapped);
+  };
+
+  console.log('frames', frames);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Media handleFiles={handleFiles} />
+      {frames.length > 0 && (
+        <Player
+          component={VideoComposition}
+          inputProps={{
+            frames
+          }}
+          durationInFrames={46}
+          fps={30}
+          compositionWidth={1280}
+          compositionHeight={1280}
+          controls
+          loop
+          style={{
+            width: 1280,
+            height: 720
+          }}
+        />
+      )}
+    </>
   );
 }
 
